@@ -2,593 +2,365 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>私人写作平台 - 我的小说</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>私人写作平台</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
-        :root {
-            --bg-primary: #f5f5f0;
-            --bg-secondary: #ffffff;
-            --text-primary: #2c2c2c;
-            --text-secondary: #6e6e6e;
-            --border-color: #e0ded9;
-            --accent-color: #8b5a2b;
-            --accent-hover: #6d461f;
-            --card-bg: #ffffff;
-            --sidebar-bg: #faf9f5;
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #1a1a1a;
-            --bg-secondary: #2a2a2a;
-            --text-primary: #e8e8e8;
-            --text-secondary: #a0a0a0;
-            --border-color: #3a3a3a;
-            --accent-color: #c9a06c;
-            --accent-hover: #e0b88c;
-            --card-bg: #2a2a2a;
-            --sidebar-bg: #222222;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', Roboto, 'Helvetica Neue', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f0;
+            height: 100vh;
+            overflow: hidden;
         }
-
         /* 登录页面 */
         .login-container {
-            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             display: flex;
-            justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #2c1810 0%, #1a0f0a 100%);
+            justify-content: center;
+            background: linear-gradient(135deg, #2c1810, #1a0f0a);
+            z-index: 1000;
         }
-
         .login-box {
-            background: var(--bg-secondary);
-            border-radius: 24px;
+            background: white;
             padding: 40px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border-radius: 24px;
             text-align: center;
+            width: 300px;
         }
-
-        .login-box h1 {
-            margin-bottom: 10px;
-            color: var(--accent-color);
-        }
-
-        .login-box p {
-            color: var(--text-secondary);
-            margin-bottom: 30px;
-        }
-
         .login-box input {
             width: 100%;
-            padding: 14px 16px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border-color);
+            padding: 12px;
+            margin: 20px 0;
+            border: 1px solid #ddd;
             border-radius: 12px;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-size: 16px;
         }
-
         .login-box button {
             width: 100%;
-            padding: 14px;
-            background: var(--accent-color);
+            padding: 12px;
+            background: #8b5a2b;
             color: white;
             border: none;
             border-radius: 12px;
-            font-size: 16px;
             cursor: pointer;
         }
-
         /* 主应用 */
         .app {
             display: none;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-
-        /* 顶部导航 */
         .navbar {
-            position: sticky;
-            top: 0;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-color);
-            padding: 12px 20px;
+            background: white;
+            border-bottom: 1px solid #e0ded9;
+            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 100;
         }
-
         .logo {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
-            color: var(--accent-color);
+            color: #8b5a2b;
         }
-
-        .nav-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
         .icon-btn {
             background: none;
             border: none;
             font-size: 20px;
             cursor: pointer;
-            padding: 8px;
-            border-radius: 8px;
-            color: var(--text-primary);
+            padding: 6px;
         }
-
-        /* 主布局 */
         .main-layout {
             display: flex;
-            height: calc(100vh - 56px);
+            flex: 1;
+            overflow: hidden;
         }
-
-        /* 侧边栏（小说列表） */
+        /* 侧边栏 */
         .sidebar {
-            width: 300px;
-            background: var(--sidebar-bg);
-            border-right: 1px solid var(--border-color);
+            width: 280px;
+            background: #faf9f5;
+            border-right: 1px solid #e0ded9;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
         }
-
         .sidebar-header {
             padding: 16px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid #e0ded9;
         }
-
         .new-novel-btn {
             width: 100%;
-            padding: 12px;
-            background: var(--accent-color);
+            padding: 10px;
+            background: #8b5a2b;
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 14px;
+            border-radius: 10px;
             cursor: pointer;
         }
-
         .novel-list {
             flex: 1;
             padding: 12px;
         }
-
         .novel-item {
             padding: 12px;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             margin-bottom: 8px;
-            transition: background 0.2s;
+            background: white;
         }
-
-        .novel-item:hover {
-            background: var(--bg-primary);
-        }
-
         .novel-item.active {
-            background: var(--bg-primary);
-            border-left: 3px solid var(--accent-color);
+            background: #e8e0d5;
+            border-left: 3px solid #8b5a2b;
         }
-
         .novel-title {
             font-weight: 500;
-            margin-bottom: 4px;
         }
-
         .novel-info {
             font-size: 12px;
-            color: var(--text-secondary);
+            color: #999;
         }
-
-        /* 主内容区 */
-        .content-area {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-        }
-
-        /* 章节列表 */
+        /* 章节面板 */
         .chapters-panel {
-            width: 280px;
-            background: var(--sidebar-bg);
-            border-right: 1px solid var(--border-color);
+            width: 260px;
+            background: #faf9f5;
+            border-right: 1px solid #e0ded9;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
         }
-
         .chapters-header {
             padding: 16px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid #e0ded9;
         }
-
         .new-chapter-btn {
             width: 100%;
             padding: 10px;
-            background: var(--accent-color);
+            background: #8b5a2b;
             color: white;
             border: none;
             border-radius: 10px;
-            font-size: 14px;
             cursor: pointer;
         }
-
         .chapters-list {
             flex: 1;
             padding: 12px;
         }
-
         .chapter-item {
-            padding: 10px 12px;
+            padding: 10px;
             border-radius: 8px;
             cursor: pointer;
-            margin-bottom: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            margin-bottom: 6px;
+            background: white;
         }
-
-        .chapter-item:hover {
-            background: var(--bg-primary);
-        }
-
         .chapter-item.active {
-            background: var(--bg-primary);
+            background: #e8e0d5;
         }
-
-        .chapter-name {
-            font-size: 14px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            flex: 1;
-        }
-
-        .chapter-delete {
-            background: none;
-            border: none;
-            font-size: 14px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            opacity: 0;
-        }
-
-        .chapter-item:hover .chapter-delete {
-            opacity: 1;
-        }
-
         /* 编辑器 */
         .editor-panel {
             flex: 1;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
+            background: white;
         }
-
         .editor-header {
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+            padding: 16px;
+            border-bottom: 1px solid #e0ded9;
         }
-
         .chapter-title-input {
-            font-size: 24px;
-            font-weight: 600;
-            background: none;
+            width: 100%;
+            font-size: 20px;
+            font-weight: bold;
             border: none;
-            color: var(--text-primary);
-            padding: 8px;
-            width: 300px;
-            border-bottom: 2px solid transparent;
-        }
-
-        .chapter-title-input:focus {
+            padding: 8px 0;
             outline: none;
-            border-bottom-color: var(--accent-color);
         }
-
         .word-count {
-            font-size: 14px;
-            color: var(--text-secondary);
+            font-size: 12px;
+            color: #999;
+            margin-top: 8px;
         }
-
-        .editor-toolbar {
-            padding: 8px 20px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .tool-btn {
-            background: none;
-            border: 1px solid var(--border-color);
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            color: var(--text-primary);
-        }
-
         .editor-content {
             flex: 1;
-            padding: 20px;
+            padding: 16px;
         }
-
         .editor-textarea {
             width: 100%;
             height: 100%;
-            min-height: 500px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
+            min-height: 400px;
+            border: 1px solid #e0ded9;
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px;
             font-size: 16px;
-            line-height: 1.8;
-            color: var(--text-primary);
+            line-height: 1.6;
             resize: none;
             font-family: inherit;
         }
-
-        .editor-textarea:focus {
-            outline: none;
-            border-color: var(--accent-color);
+        .empty-tip {
+            padding: 40px;
+            text-align: center;
+            color: #999;
         }
-
-        /* 移动端适配 */
-        @media (max-width: 768px) {
-            .sidebar {
-                position: fixed;
-                left: -300px;
-                z-index: 200;
-                transition: left 0.3s;
-                height: 100%;
-                top: 56px;
-            }
-            .sidebar.open {
-                left: 0;
-            }
-            .chapters-panel {
+        @media (max-width: 700px) {
+            .sidebar, .chapters-panel {
                 position: fixed;
                 left: -280px;
                 z-index: 200;
-                transition: left 0.3s;
                 height: 100%;
-                top: 56px;
+                background: white;
             }
-            .chapters-panel.open {
+            .sidebar.open, .chapters-panel.open {
                 left: 0;
             }
             .menu-btn {
-                display: block;
+                display: inline-block;
             }
         }
-
         .menu-btn {
             display: none;
-            background: none;
-            border: none;
             font-size: 24px;
-            cursor: pointer;
-            color: var(--text-primary);
-            margin-right: 12px;
-        }
-
-        .save-status {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .novel-delete {
             background: none;
             border: none;
-            font-size: 14px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            opacity: 0;
-            float: right;
-        }
-
-        .novel-item:hover .novel-delete {
-            opacity: 1;
+            margin-right: 12px;
         }
     </style>
 </head>
 <body>
-    <!-- 登录页面 -->
     <div class="login-container" id="loginContainer">
         <div class="login-box">
-            <h1>📖 私人写作平台</h1>
-            <p>输入密码进入你的创作空间</p>
-            <input type="password" id="passwordInput" placeholder="密码" autocomplete="off">
+            <h2>📖 私人写作平台</h2>
+            <input type="password" id="passwordInput" placeholder="密码">
             <button onclick="checkLogin()">进入</button>
         </div>
     </div>
 
-    <!-- 主应用 -->
     <div class="app" id="app">
         <div class="navbar">
             <div style="display: flex; align-items: center;">
-                <button class="menu-btn" id="menuBtn" onclick="toggleMobileSidebar()">☰</button>
+                <button class="menu-btn" onclick="toggleSidebar()">☰</button>
                 <div class="logo">📝 我的创作</div>
             </div>
-            <div class="nav-buttons">
+            <div>
                 <button class="icon-btn" onclick="toggleTheme()">🌙</button>
-                <button class="icon-btn" onclick="exportAllData()">💾</button>
-                <button class="icon-btn" onclick="logout()">🚪</button>
+                <button class="icon-btn" onclick="exportData()">💾</button>
             </div>
         </div>
 
         <div class="main-layout">
-            <!-- 左侧小说列表 -->
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-header">
-                    <button class="new-novel-btn" onclick="createNewNovel()">+ 新建小说</button>
+                    <button class="new-novel-btn" onclick="createNovel()">+ 新建小说</button>
                 </div>
                 <div class="novel-list" id="novelList"></div>
             </div>
 
-            <!-- 中间章节列表 -->
-            <div class="content-area">
-                <div class="chapters-panel" id="chaptersPanel">
-                    <div class="chapters-header">
-                        <button class="new-chapter-btn" onclick="createNewChapter()">+ 新建章节</button>
-                    </div>
-                    <div class="chapters-list" id="chaptersList"></div>
+            <div class="chapters-panel" id="chaptersPanel">
+                <div class="chapters-header">
+                    <button class="new-chapter-btn" onclick="createChapter()">+ 新建章节</button>
                 </div>
+                <div class="chapters-list" id="chaptersList">
+                    <div class="empty-tip">请先选择小说</div>
+                </div>
+            </div>
 
-                <!-- 右侧编辑器 -->
-                <div class="editor-panel" id="editorPanel">
-                    <div class="editor-header">
-                        <input type="text" class="chapter-title-input" id="chapterTitle" placeholder="章节标题" onchange="saveCurrentChapter()">
-                        <div class="word-count" id="wordCount">0字</div>
-                    </div>
-                    <div class="editor-toolbar">
-                        <button class="tool-btn" onclick="insertFormat('bold')">B</button>
-                        <button class="tool-btn" onclick="insertFormat('italic')">I</button>
-                        <button class="tool-btn" onclick="insertFormat('heading')">H1</button>
-                        <button class="tool-btn" onclick="insertFormat('heading2')">H2</button>
-                        <button class="tool-btn" onclick="insertMarkdown('**', '**')">加粗</button>
-                        <button class="tool-btn" onclick="insertMarkdown('*', '*')">斜体</button>
-                        <button class="tool-btn" onclick="insertMarkdown('# ', '')">标题</button>
-                        <button class="tool-btn" onclick="insertMarkdown('> ', '')">引用</button>
-                        <button class="tool-btn" onclick="insertMarkdown('- ', '')">列表</button>
-                        <button class="tool-btn" onclick="insertMarkdown('---\n', '')">分割线</button>
-                    </div>
-                    <div class="editor-content">
-                        <textarea class="editor-textarea" id="chapterContent" placeholder="开始写作...&#10;&#10;支持Markdown格式：&#10;# 标题&#10;**加粗**&#10;*斜体*&#10;- 列表" oninput="updateWordCount(); autoSave()"></textarea>
-                    </div>
+            <div class="editor-panel" id="editorPanel">
+                <div class="editor-header">
+                    <input type="text" class="chapter-title-input" id="chapterTitle" placeholder="章节标题" onchange="saveChapter()">
+                    <div class="word-count" id="wordCount">0字</div>
+                </div>
+                <div class="editor-content">
+                    <textarea class="editor-textarea" id="chapterContent" placeholder="开始写作..." oninput="updateWordCount(); autoSave()"></textarea>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ========== 密码配置 ==========
-        // 修改这里的密码为你想要的！
-        const CORRECT_PASSWORD = "xiaoshuo123";
-        
-        // ========== 数据存储 ==========
+        const PASSWORD = "xiaoshuo123";
         let novels = [];
         let currentNovelId = null;
         let currentChapterId = null;
-        let autoSaveTimer = null;
+        let saveTimer = null;
 
-        // 加载数据
+        function checkLogin() {
+            if (document.getElementById('passwordInput').value === PASSWORD) {
+                localStorage.setItem('logged_in', 'true');
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('app').style.display = 'flex';
+                loadData();
+            } else {
+                alert('密码错误');
+            }
+        }
+
         function loadData() {
-            const saved = localStorage.getItem('novels_data');
+            const saved = localStorage.getItem('novels');
             if (saved) {
                 novels = JSON.parse(saved);
             } else {
-                // 示例数据
-                novels = [
-                    {
-                        id: Date.now(),
-                        name: "完结",
-                        chapters: [
-                            { id: Date.now() + 1, title: "第一章 开端", content: "这是一个开始...", createdAt: Date.now() },
-                            { id: Date.now() + 2, title: "第二章 发展", content: "故事继续...", createdAt: Date.now() }
-                        ],
-                        createdAt: Date.now()
-                    },
-                    {
-                        id: Date.now() + 3,
-                        name: "犯规招惹",
-                        chapters: [],
-                        createdAt: Date.now()
-                    },
-                    {
-                        id: Date.now() + 4,
-                        name: "都杀了，做人没必要太正常",
-                        chapters: [],
-                        createdAt: Date.now()
-                    }
-                ];
+                novels = [];
             }
-            renderNovelList();
+            renderNovels();
         }
 
-        // 保存数据
-        function saveData() {
-            localStorage.setItem('novels_data', JSON.stringify(novels));
+        function saveAllData() {
+            localStorage.setItem('novels', JSON.stringify(novels));
+            renderNovels();
         }
 
-        // 渲染小说列表
-        function renderNovelList() {
+        function renderNovels() {
             const container = document.getElementById('novelList');
             container.innerHTML = novels.map(novel => `
                 <div class="novel-item ${currentNovelId === novel.id ? 'active' : ''}" onclick="selectNovel('${novel.id}')">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <div class="novel-title">📖 ${escapeHtml(novel.name)}</div>
-                            <div class="novel-info">${novel.chapters.length}章 · ${getTotalWords(novel)}字</div>
-                        </div>
-                        <button class="novel-delete" onclick="event.stopPropagation(); deleteNovel('${novel.id}')">🗑️</button>
-                    </div>
+                    <div class="novel-title">📖 ${escapeHtml(novel.name)}</div>
+                    <div class="novel-info">${novel.chapters.length}章 · ${getWordCount(novel)}字</div>
                 </div>
             `).join('');
         }
 
-        // 获取小说总字数
-        function getTotalWords(novel) {
+        function getWordCount(novel) {
             let total = 0;
-            for (const chapter of novel.chapters) {
-                total += chapter.content.replace(/\s/g, '').length;
+            for (const ch of novel.chapters) {
+                total += ch.content.replace(/\s/g, '').length;
             }
             return total;
         }
 
-        // 选择小说
         function selectNovel(novelId) {
             currentNovelId = novelId;
             currentChapterId = null;
-            renderNovelList();
-            renderChaptersList();
+            renderNovels();
+            renderChapters();
             clearEditor();
         }
 
-        // 渲染章节列表
-        function renderChaptersList() {
+        function renderChapters() {
             const novel = novels.find(n => n.id === currentNovelId);
+            const container = document.getElementById('chaptersList');
             if (!novel) {
-                document.getElementById('chaptersList').innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-secondary);">请先选择小说</div>';
+                container.innerHTML = '<div class="empty-tip">请先选择小说</div>';
                 return;
             }
-            
-            const container = document.getElementById('chaptersList');
-            container.innerHTML = novel.chapters.map((chapter, index) => `
-                <div class="chapter-item ${currentChapterId === chapter.id ? 'active' : ''}" onclick="selectChapter('${chapter.id}')">
-                    <span class="chapter-name">📄 ${index + 1}. ${escapeHtml(chapter.title)}</span>
-                    <button class="chapter-delete" onclick="event.stopPropagation(); deleteChapter('${chapter.id}')">🗑️</button>
+            if (novel.chapters.length === 0) {
+                container.innerHTML = '<div class="empty-tip">暂无章节，点击上方新建</div>';
+                return;
+            }
+            container.innerHTML = novel.chapters.map((ch, idx) => `
+                <div class="chapter-item ${currentChapterId === ch.id ? 'active' : ''}" onclick="selectChapter('${ch.id}')">
+                    📄 ${idx+1}. ${escapeHtml(ch.title)}
                 </div>
             `).join('');
-            
-            if (novel.chapters.length === 0) {
-                container.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-secondary);">暂无章节，点击新建</div>';
-            }
         }
 
-        // 选择章节
         function selectChapter(chapterId) {
             currentChapterId = chapterId;
             const novel = novels.find(n => n.id === currentNovelId);
@@ -598,225 +370,86 @@
                 document.getElementById('chapterContent').value = chapter.content;
                 updateWordCount();
             }
-            renderChaptersList();
+            renderChapters();
         }
 
-        // 清空编辑器
         function clearEditor() {
             document.getElementById('chapterTitle').value = '';
             document.getElementById('chapterContent').value = '';
             updateWordCount();
         }
 
-        // 保存当前章节
-        function saveCurrentChapter() {
+        function updateWordCount() {
+            const content = document.getElementById('chapterContent').value;
+            const count = content.replace(/\s/g, '').length;
+            document.getElementById('wordCount').textContent = count + '字';
+        }
+
+        function saveChapter() {
             if (!currentNovelId || !currentChapterId) return;
-            
             const novel = novels.find(n => n.id === currentNovelId);
             const chapter = novel?.chapters.find(c => c.id === currentChapterId);
             if (chapter) {
                 chapter.title = document.getElementById('chapterTitle').value || '无标题';
                 chapter.content = document.getElementById('chapterContent').value;
-                chapter.updatedAt = Date.now();
-                saveData();
-                renderNovelList();
-                renderChaptersList();
-                showSaveStatus();
+                saveAllData();
+                renderChapters();
             }
         }
 
-        // 自动保存
         function autoSave() {
-            if (autoSaveTimer) clearTimeout(autoSaveTimer);
-            autoSaveTimer = setTimeout(() => {
-                saveCurrentChapter();
-            }, 2000);
+            if (saveTimer) clearTimeout(saveTimer);
+            saveTimer = setTimeout(() => saveChapter(), 1500);
         }
 
-        // 显示保存状态
-        function showSaveStatus() {
-            const status = document.getElementById('saveStatus');
-            if (status) {
-                status.textContent = '已保存';
-                setTimeout(() => {
-                    status.textContent = '';
-                }, 1500);
-            }
-        }
-
-        // 更新字数统计
-        function updateWordCount() {
-            const content = document.getElementById('chapterContent').value;
-            const words = content.replace(/\s/g, '').length;
-            document.getElementById('wordCount').textContent = words + '字';
-        }
-
-        // 新建小说
-        function createNewNovel() {
-            const name = prompt('请输入小说名称');
+        function createNovel() {
+            const name = prompt('小说名称');
             if (name && name.trim()) {
-                const newNovel = {
+                novels.push({
                     id: Date.now(),
                     name: name.trim(),
-                    chapters: [],
-                    createdAt: Date.now()
-                };
-                novels.push(newNovel);
-                saveData();
-                renderNovelList();
-                selectNovel(newNovel.id);
+                    chapters: []
+                });
+                saveAllData();
             }
         }
 
-        // 删除小说
-        function deleteNovel(novelId) {
-            if (confirm('确定要删除这本小说吗？所有章节也会被删除！')) {
-                novels = novels.filter(n => n.id !== novelId);
-                if (currentNovelId === novelId) {
-                    currentNovelId = null;
-                    currentChapterId = null;
-                    clearEditor();
-                }
-                saveData();
-                renderNovelList();
-                renderChaptersList();
-            }
-        }
-
-        // 新建章节
-        function createNewChapter() {
+        function createChapter() {
             if (!currentNovelId) {
                 alert('请先选择一本小说');
                 return;
             }
-            
-            const title = prompt('请输入章节标题');
-            const novel = novels.find(n => n.id === currentNovelId);
-            if (title && title.trim() && novel) {
+            const title = prompt('章节标题');
+            if (title && title.trim()) {
+                const novel = novels.find(n => n.id === currentNovelId);
                 const newChapter = {
                     id: Date.now(),
                     title: title.trim(),
-                    content: '',
-                    createdAt: Date.now()
+                    content: ''
                 };
                 novel.chapters.push(newChapter);
-                saveData();
-                renderChaptersList();
+                saveAllData();
+                renderChapters();
                 selectChapter(newChapter.id);
             }
         }
 
-        // 删除章节
-        function deleteChapter(chapterId) {
-            if (confirm('确定要删除这个章节吗？')) {
-                const novel = novels.find(n => n.id === currentNovelId);
-                if (novel) {
-                    novel.chapters = novel.chapters.filter(c => c.id !== chapterId);
-                    if (currentChapterId === chapterId) {
-                        currentChapterId = null;
-                        clearEditor();
-                    }
-                    saveData();
-                    renderChaptersList();
-                    renderNovelList();
-                }
-            }
-        }
-
-        // 插入格式
-        function insertFormat(type) {
-            const textarea = document.getElementById('chapterContent');
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const selected = textarea.value.substring(start, end);
-            let replacement = '';
-            
-            switch(type) {
-                case 'bold':
-                    replacement = `**${selected}**`;
-                    break;
-                case 'italic':
-                    replacement = `*${selected}*`;
-                    break;
-                case 'heading':
-                    replacement = `# ${selected}`;
-                    break;
-                case 'heading2':
-                    replacement = `## ${selected}`;
-                    break;
-            }
-            
-            textarea.value = textarea.value.substring(0, start) + replacement + textarea.value.substring(end);
-            textarea.selectionStart = start;
-            textarea.selectionEnd = start + replacement.length;
-            textarea.focus();
-            updateWordCount();
-            autoSave();
-        }
-
-        function insertMarkdown(prefix, suffix) {
-            const textarea = document.getElementById('chapterContent');
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const selected = textarea.value.substring(start, end);
-            const replacement = prefix + selected + suffix;
-            
-            textarea.value = textarea.value.substring(0, start) + replacement + textarea.value.substring(end);
-            textarea.selectionStart = start + prefix.length;
-            textarea.selectionEnd = start + prefix.length + selected.length;
-            textarea.focus();
-            updateWordCount();
-            autoSave();
-        }
-
-        // 导出数据
-        function exportAllData() {
-            const dataStr = JSON.stringify(novels, null, 2);
+        function exportData() {
+            const dataStr = JSON.stringify(novels);
             const blob = new Blob([dataStr], {type: 'application/json'});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `novels_backup_${new Date().toLocaleDateString()}.json`;
+            a.download = `novels_${Date.now()}.json`;
             a.click();
             URL.revokeObjectURL(url);
-            alert('导出成功！文件保存在下载文件夹');
         }
 
-        // 主题切换
         function toggleTheme() {
-            const isDark = document.body.getAttribute('data-theme') === 'dark';
-            if (isDark) {
-                document.body.removeAttribute('data-theme');
-                localStorage.setItem('writing_theme', 'light');
-            } else {
-                document.body.setAttribute('data-theme', 'dark');
-                localStorage.setItem('writing_theme', 'dark');
-            }
+            alert('主题切换功能开发中');
         }
 
-        // 登录检查
-        function checkLogin() {
-            const password = document.getElementById('passwordInput').value;
-            if (password === CORRECT_PASSWORD) {
-                localStorage.setItem('writing_logged_in', 'true');
-                document.getElementById('loginContainer').style.display = 'none';
-                document.getElementById('app').style.display = 'block';
-                loadData();
-            } else {
-                alert('密码错误！');
-            }
-        }
-
-        // 退出登录
-        function logout() {
-            localStorage.removeItem('writing_logged_in');
-            document.getElementById('loginContainer').style.display = 'flex';
-            document.getElementById('app').style.display = 'none';
-            document.getElementById('passwordInput').value = '';
-        }
-
-        // 移动端菜单
-        function toggleMobileSidebar() {
+        function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
         }
 
@@ -826,30 +459,11 @@
             return div.innerHTML;
         }
 
-        // 加载主题
-        function loadTheme() {
-            const savedTheme = localStorage.getItem('writing_theme');
-            if (savedTheme === 'dark') {
-                document.body.setAttribute('data-theme', 'dark');
-            }
+        if (localStorage.getItem('logged_in') === 'true') {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('app').style.display = 'flex';
+            loadData();
         }
-
-        // 检查登录状态
-        function checkLoginStatus() {
-            const loggedIn = localStorage.getItem('writing_logged_in');
-            if (loggedIn === 'true') {
-                document.getElementById('loginContainer').style.display = 'none';
-                document.getElementById('app').style.display = 'block';
-                loadData();
-            } else {
-                document.getElementById('loginContainer').style.display = 'flex';
-                document.getElementById('app').style.display = 'none';
-            }
-        }
-
-        // 初始化
-        loadTheme();
-        checkLoginStatus();
     </script>
 </body>
 </html>
